@@ -1,4 +1,5 @@
 <?php
+
 namespace Controllers\IntentosPago;
 
 use Controllers\PublicController;
@@ -13,26 +14,37 @@ class IntentosPago extends PublicController
         "DEL" => "Eliminando %s (%s)"
     );
     private $_estOptions = array(
-        "ENV"=> "Enviado",
+        "ENV" => "Enviado",
         "PGD" => "Pagado",
         "CNL" => "Cancelado",
         "ERR" => "Error"
     );
     private $_viewData = array(
-        "mode"=>"INS",
-        "id"=>0,
-        "clinete"=>"",
-        "monto"=>"",
-        "fecha_vencimiento"=>"",
-        "estado"=>"ENV",
-        "modeDsc"=>"",
-        "readonly"=>false,
-        "isInsert"=>false,
-        "estOptions"=>[]
+        "mode" => "INS",
+        "id" => 0,
+        "cliente" => "",
+        "monto" => "",
+        "fecha_vencimiento" => "",
+        "estado" => "ENV",
+        "modeDsc" => "",
+        "readonly" => false,
+        "isInsert" => false,
+        "estOptions" => [],
+        "crsxToken" => ""
     );
-    private function init(){
+    private function init()
+    {
         if (isset($_GET["mode"])) {
             $this->_viewData["mode"] = $_GET["mode"];
+            if($_GET["mode"] == "DSP")
+            {
+                $this->_viewData["readonly"] = true;
+            }
+            else
+            {
+                $this->_viewData["readonly"] = false;
+            }
+
         }
         if (isset($_GET["id"])) {
             $this->_viewData["id"] = $_GET["id"];
@@ -54,71 +66,80 @@ class IntentosPago extends PublicController
     private function handlePost()
     {
         \Utilities\ArrUtils::mergeFullArrayTo($_POST, $this->_viewData);
+
+        if (!(isset($_SESSION["pago_crsxToken"])
+            && $_SESSION["pago_crsxToken"] == $this->_viewData["crsxToken"])) {
+            unset($_SESSION["pago_crsxToken"]);
+            \Utilities\Site::redirectToWithMsg(
+                'index.php?page=IntentosPago_IntentosPagos',
+                'Ocurrio un error, no se puede procesar el formulario.'
+            );
+        }
+
+
         $this->_viewData["id"] = intval($this->_viewData["id"], 10);
         if (!\Utilities\Validators::isMatch(
             $this->_viewData["estado"],
             "/^(ENV)|(PGD)|(CNL)|(ERR)$/"
-        )
-        ) {
+        )) {
             $this->_viewData["errors"][] = "Pago debe ser ENV,PGD,CNL o ERR";
         }
 
-        if (isset($this->_viewData["errors"]) && count($this->_viewData["errors"]) > 0 ) {
-
+        if (isset($this->_viewData["errors"]) && count($this->_viewData["errors"]) > 0) {
         } else {
             switch ($this->_viewData["mode"]) {
-            case 'INS':
-                # code...
-                $result = \Dao\IntentosPagos\IntentosPagos::nuevoPago(
-                    $this->_viewData["cliente"],
-                    $this->_viewData["monto"],
-                    $this->_viewData["fecha_vencimiento"],
-                    $this->_viewData["estado"]
-                );
-                if ($result) {
-                    \Utilities\Site::redirectToWithMsg(
-                        'index.php?page=IntentosPago_IntentosPagos',
-                        "¡Pago guardado satisfactoriamente!"
+                case 'INS':
+                    # code...
+                    $result = \Dao\IntentosPagos\IntentosPagos::nuevoPago(
+                        $this->_viewData["cliente"],
+                        $this->_viewData["monto"],
+                        $this->_viewData["fecha_vencimiento"],
+                        $this->_viewData["estado"]
                     );
-                }
-                break;
-            case 'UPD':
-                $result = \Dao\IntentosPagos\IntentosPagos::actualizarPago(
-                    $this->_viewData["id"],
-                    $this->_viewData["cliente"],
-                    $this->_viewData["monto"],
-                    $this->_viewData["fecha_vencimiento"],
-                    $this->_viewData["estado"]
-                );
-                if ($result) {
-                    \Utilities\Site::redirectToWithMsg(
-                        'index.php?page=IntentosPago_IntentosPagos',
-                        "¡Pago actualizado satisfactoriamente!"
+                    if ($result) {
+                        \Utilities\Site::redirectToWithMsg(
+                            'index.php?page=IntentosPago_IntentosPagos',
+                            "¡Pago guardado satisfactoriamente!"
+                        );
+                    }
+                    break;
+                case 'UPD':
+                    $result = \Dao\IntentosPagos\IntentosPagos::actualizarPago(
+                        $this->_viewData["id"],
+                        $this->_viewData["cliente"],
+                        $this->_viewData["monto"],
+                        $this->_viewData["fecha_vencimiento"],
+                        $this->_viewData["estado"]
                     );
-                }
-                break;
-            case 'DEL':
-                $result = \Dao\IntentosPagos\IntentosPagos::eliminarPago(
-                    $this->_viewData["id"]
-                );
-                if ($result) {
-                    \Utilities\Site::redirectToWithMsg(
-                        'index.php?page=IntentosPago_IntentosPagos',
-                        "¡Pago eliminada satisfactoriamente!"
+                    if ($result) {
+                        \Utilities\Site::redirectToWithMsg(
+                            'index.php?page=IntentosPago_IntentosPagos',
+                            "¡Pago actualizado satisfactoriamente!"
+                        );
+                    }
+                    break;
+                case 'DEL':
+                    $result = \Dao\IntentosPagos\IntentosPagos::eliminarPago(
+                        $this->_viewData["id"]
                     );
-                }
-                break;
-            default:
-                # code...
-                break;
+                    if ($result) {
+                        \Utilities\Site::redirectToWithMsg(
+                            'index.php?page=IntentosPago_IntentosPagos',
+                            "¡Pago eliminada satisfactoriamente!"
+                        );
+                    }
+                    break;
+                default:
+                    # code...
+                    break;
             }
         }
     }
     private function prepareViewData()
     {
         if ($this->_viewData["mode"] == "INS") {
-             $this->_viewData["modeDsc"]
-                 = $this->_modeStrings[$this->_viewData["mode"]];
+            $this->_viewData["modeDsc"]
+                = $this->_modeStrings[$this->_viewData["mode"]];
         } else {
             $tmpPagos = \Dao\IntentosPagos\IntentosPagos::obtenerPorId(
                 intval($this->_viewData["id"], 10)
@@ -141,6 +162,8 @@ class IntentosPago extends PublicController
                 'selected',
                 $this->_viewData['estado']
             );
+        $this->_viewData["crsxToken"] = md5(time() . "pago");
+        $_SESSION["pago_crsxToken"] = $this->_viewData["crsxToken"];
     }
     public function run(): void
     {
@@ -152,5 +175,3 @@ class IntentosPago extends PublicController
         Renderer::render('IntentosPago/IntentosPago', $this->_viewData);
     }
 }
-
-?>
