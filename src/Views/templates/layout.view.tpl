@@ -29,7 +29,9 @@
       <ul>
         <li><a href="index.php?page=index"><i class="fas fa-home"></i>&nbsp;Inicio</a></li>
         <li><a href="index.php?page=IntentosPago_IntentosPagos"><i class="fas fa-user-plus"></i>&nbsp;Listar Pagos</a></li>
-        <li><a href="index.php?page=IntentosPago_IntentosPago&mode=INS&id=0"><i class="fas fa-user-plus"></i>&nbsp;Registrar Pagos</a></li>
+        <li><a href="index.php?page=ORM_parameters"><i class="fas fa-user-plus"></i>&nbsp;Generar Crud</a></li>
+        <li><a href="index.php?page=LugaresTuristicos_LugaresTuristicos"><i class="fas fa-user-plus"></i>&nbsp;Lugares Turisticos</a></li>
+         <li><a href="index.php?page=sec_register"><i class="fas fa-user-plus"></i>&nbsp;Crear Cuenta</a></li>
         <li><a href="index.php?page=sec_login"><i class="fas fa-sign-in-alt"></i>&nbsp;Iniciar Sesión</a></li>
         <li><a href="index.php?page=sec_register"><i class="fas fa-user-plus"></i>&nbsp;Crear Cuenta</a></li>
       </ul>
