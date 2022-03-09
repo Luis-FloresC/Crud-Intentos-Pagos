@@ -11,7 +11,7 @@ class LugaresTuristicos extends PublicController{
         $viewData = array();
         
         $viewData["LugaresTuristicos"] = \Dao\LugaresTuristicos\LugaresTuristicos::obtenerTodos();
-        
+
         Renderer::render('LugaresTuristicos/LugaresTuristicos',$viewData);
     } 
 
