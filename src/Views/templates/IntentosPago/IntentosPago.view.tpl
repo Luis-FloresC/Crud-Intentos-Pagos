@@ -17,8 +17,7 @@
                 {{ifnot isInsert}}
                     <div class="col-md-4 mb-3">
                         <label for="id">ID Categoría</label>
-                        <input type="text" class="form-control" nombre="id" id="id" placeholder="Id Pago"
-                            value="{{id}}" required readonly />
+                        <input type="text" class="form-control" nombre="id" id="id" placeholder="Id Pago" value="{{id}}" required readonly />
                         <div class="valid-feedback">¡Se ve bien!</div>
                         <div class="invalid-feedback">Por favor ingrese un nombre!</div>
                     </div>

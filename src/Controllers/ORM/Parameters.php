@@ -18,6 +18,7 @@ class Parameters extends PublicController
             $this->GenerarModeloTable();
             $this->GeneradorControladorTabla();
             $this->GenerarVistaDeRegistros();
+            $this->GenerarFormularioTabla();
         }
         Renderer::render('ORM/parameters', $this->_viewData);
     }
@@ -397,5 +398,105 @@ class Parameters extends PublicController
         $buffer[] = '</script> ';
         $buffer[] = '';
         $this->_viewData["FormListar"] = htmlspecialchars(implode("\n", $buffer));
+    }
+
+    public function GenerarFormularioTabla()
+    {
+        $buffer = array();
+        $buffer[] = '<div class="container-fluid">';
+        $buffer[] = '  <div class="form">';
+
+        $buffer[] = '   <figure class="text-center">';
+        $buffer[] = '       <blockquote class="blockquote">';
+        $buffer[] = sprintf('          <h1>Formulario de %s</h1>', $this->_viewData["entity"]);
+        $buffer[] = '       </blockquote>';
+        $buffer[] = '       <figcaption class="blockquote-footer">';
+        $buffer[] = '           Descripción: <cite title="Source Title">{{modeDsc}}</cite>';
+        $buffer[] = '       </figcaption>';
+        $buffer[] = '   </figure> ';
+        $buffer[] = '   <div class="form-row">  ';
+        $buffer[] = sprintf('           <form action="index.php?page=%s.%s&mode={{mode}}&%s={{id}}" class="needs-validation" novalidate method="post">', $this->_viewData["namespace"], $this->_viewData["entity"], $this->_viewData["LlavePrimaria"]);
+        $buffer[] = '';
+        $buffer[] = '               <input type="hidden" name="crsxToken" value="{{crsxToken}}" />';
+        foreach ($this->_viewData["tabla"] as $field) {
+            $buffer[] = '             <div class="col-md-4 mb-3">';
+            $buffer[] = sprintf('               <label for="%s">%s</label>', $field["Field"], $field["Field"]);
+            if ($field['Null'] == "NO") {
+                $buffer[] = sprintf('               <input type="text" class="form-control" name="%s" id="%s" placeholder="%s" value="{{%s}}" required  />', $field["Field"], $field["Field"], $field["Field"], $field["Field"]);
+            } else {
+                $buffer[] = sprintf('               <input type="text" class="form-control" name="%s" id="%s" placeholder="%s" value="{{%s}}"  />', $field["Field"], $field["Field"], $field["Field"], $field["Field"]);
+            }
+            $buffer[] = '               <div class="valid-feedback">¡Se ve bien!</div>';
+            $buffer[] = '               <div class="invalid-feedback">Por favor ingrese los datos correctos!</div>';
+            $buffer[] = '             </div>';
+            $buffer[] = '';
+        }
+        $buffer[] = '       {{ifnot readonly}}';
+        $buffer[] = '';
+        $buffer[] = '           <button class="btn btn-primary" type="submit">Enviar</button> &nbsp;';
+        $buffer[] = '           <button name="btnCancelar" id="btnCancelar" class="btn btn-danger">Cancelar</button>';
+        $buffer[] = '';
+        $buffer[] = '       {{endifnot readonly}}';
+        $buffer[] = '';
+        $buffer[] = '       {{if readonly}}';
+        $buffer[] = '';
+        $buffer[] = '           <button name="btnCancelar" id="btnCancelar" class="btn btn-success">Ver Lista de Pagos</button>';
+        $buffer[] = '';
+        $buffer[] = '       {{endif readonly}}';
+        $buffer[] = '';
+        $buffer[] = '           </form>';
+        $buffer[] = '   </div>';
+
+        $buffer[] = '  </div>';
+        $buffer[] = '</div>';
+        $buffer[] = '';
+        $buffer[] =  '<script> ';
+        $buffer[] = '';
+        $buffer[] = ' document.addEventListener("DOMContentLoaded", (e) => { ';
+        $buffer[] =   '  var btnNuevo = document.getElementById("btnCancelar"); ';
+        $buffer[] =  '  btnNuevo.addEventListener("click", (e) => { ';
+        $buffer[] =     '  e.preventDefault(); ';
+        $buffer[] =     '  e.stopPropagation(); ';
+        $buffer[] =     '  window.location.assign( ';
+        $buffer[] =   sprintf('     "index.php?page=%s_%s"', $this->_viewData["namespace"], $this->_viewData["entity"], $this->_viewData["LlavePrimaria"]);
+        $buffer[] =      '   ); ';
+        $buffer[] =   '  }); ';
+        $buffer[] = ' }); ';
+        $buffer[] = '';
+        $buffer[] = '</script> ';
+
+        $buffer[] = '';
+        $buffer[] =  '<script> ';
+        $buffer[] = '';
+
+        $buffer[] = ' (function () {';
+        $buffer[] = '   "use strict";';
+        $buffer[] = '  window.addEventListener(';
+        $buffer[] = '     "load",';
+        $buffer[] = '    function () {';
+        $buffer[] = '      var forms = document.getElementsByClassName("needs-validation");';
+        $buffer[] = '     var validation = Array.prototype.filter.call(';
+        $buffer[] = '    forms,';
+        $buffer[] = '    function (form) { ';
+        $buffer[] = '       form.addEventListener( ';
+        $buffer[] = '          "submit", ';
+        $buffer[] = '          function (event) { ';
+        $buffer[] = '            if (form.checkValidity() === false) { ';
+        $buffer[] = '               event.preventDefault(); ';
+        $buffer[] = '               event.stopPropagation(); ';
+        $buffer[] = '           }';
+        $buffer[] = '           form.classList.add("was-validated");';
+        $buffer[] = '       },';
+        $buffer[] = '       false';
+        $buffer[] = '   );';
+        $buffer[] = '   }';
+        $buffer[] = '  );';
+        $buffer[] = '  },';
+        $buffer[] = '  false';
+        $buffer[] = '  );';
+        $buffer[] = '  })();';
+        $buffer[] = '';
+        $buffer[] = '</script> ';
+        $this->_viewData["FormTabla"] = htmlspecialchars(implode("\n", $buffer));
     }
 }
