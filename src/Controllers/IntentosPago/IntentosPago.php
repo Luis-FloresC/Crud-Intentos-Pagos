@@ -50,10 +50,7 @@ class IntentosPago extends PublicController
             $this->_viewData["id"] = $_GET["id"];
         }
         if (!isset($this->_modeStrings[$this->_viewData["mode"]])) {
-            error_log(
-                $this->toString() . " Mode no valido " . $this->_viewData["mode"],
-                0
-            );
+            error_log($this->toString() . " Mode no valido " . $this->_viewData["mode"],0);
             \Utilities\Site::redirectToWithMsg(
                 'index.php?page=IntentosPago_IntentosPagos',
                 'Sucedio un error al procesar la página.'
@@ -97,10 +94,7 @@ class IntentosPago extends PublicController
                         $this->_viewData["estado"]
                     );
                     if ($result) {
-                        \Utilities\Site::redirectToWithMsg(
-                            'index.php?page=IntentosPago_IntentosPagos',
-                            "¡Pago guardado satisfactoriamente!"
-                        );
+                        \Utilities\Site::redirectToWithMsg('index.php?page=IntentosPago_IntentosPagos',"¡Pago guardado satisfactoriamente!");
                     }
                     break;
                 case 'UPD':
@@ -141,12 +135,9 @@ class IntentosPago extends PublicController
             $this->_viewData["modeDsc"]
                 = $this->_modeStrings[$this->_viewData["mode"]];
         } else {
-            $tmpPagos = \Dao\IntentosPagos\IntentosPagos::obtenerPorId(
-                intval($this->_viewData["id"], 10)
-            );
+            $tmpPagos = \Dao\IntentosPagos\IntentosPagos::obtenerPorId(intval($this->_viewData["id"], 10));
             \Utilities\ArrUtils::mergeFullArrayTo($tmpPagos, $this->_viewData);
-            $this->_viewData["modeDsc"] = sprintf(
-                $this->_modeStrings[$this->_viewData["mode"]],
+            $this->_viewData["modeDsc"] = sprintf($this->_modeStrings[$this->_viewData["mode"]],
                 $this->_viewData["cliente"],
                 $this->_viewData["id"],
                 $this->_viewData["monto"],

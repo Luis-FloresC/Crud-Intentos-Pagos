@@ -1,42 +1,128 @@
-
-
-  <div class="container-fluid">
+    <div class="container-fluid">
         <figure class="text-center">
             <blockquote class="blockquote">
-                <h1>Generador de Crud {{dato}}</h1>
+                <h1>Generador de Crud </h1>
             </blockquote>
         </figure>
 
 
         <div class="form">
 
-        <form action="index.php?page=ORM_parameters"  method="post">
-            <label for="table"><input id="table" name="table" placeholder="table" type="text"></label> 
-            <label for="namespace"><input id="namespace" name="namespace"  placeholder="namespace" type="text"></label> 
-            <label for="entity"><input id="entity"   name="entity" placeholder="entity" type="text"></label> 
-            <button type="submit" class="btn btn-primary btn-lg">Generar</button>
-        </form>
+            <form action="index.php?page=ORM_parameters" method="post">
+                <label for="table"><input id="table" name="table" placeholder="table" type="text"></label>
+                <label for="namespace"><input id="namespace" name="namespace" placeholder="namespace"
+                        type="text"></label>
+                <label for="entity"><input id="entity" name="entity" placeholder="entity" type="text"></label>
+                <button type="submit" class="btn btn-primary btn-lg">Generar</button>
+            </form>
         </div>
 
-   {{if ListaControlador}}
-        <div class="highlight"> 
-        <pre class="chroma">{{ListaControlador}}</pre>
+            <br>
+            <br>
+            {{if ModeloTabla}}
+                    <figure class="text-center">
+                        <blockquote class="blockquote">
+                            <h3>Modelo de la Tabla: {{table}}</h3> &nbsp;
+                            <button type="button" onclick="copiarAlPortapapeles('p1')" class="btn btn-secondary">Copiar</button>
+
+                        </blockquote>
+                    </figure>
+                    <div class="card">
+
+                        <div class="card-body">
+                            <pre id="p1" class="chroma">{{ModeloTabla}}</pre>
+                        </div>
+                    </div>
+                    {{endif ModeloTabla}}
+            <br>
+            <br>
+        {{if ListaControlador}}
+        <figure class="text-center">
+            <blockquote class="blockquote">
+                <h3>Controlador de Listado: {{table}}</h3>
+                &nbsp;&nbsp;
+                 <button type="button" onclick="copiarAlPortapapeles('p2')" class="btn btn-secondary">Copiar</button>
+            </blockquote>
+        </figure>
+        <div class="card">
+
+            <div class="card-body">
+                <pre class="chroma" id="p2">{{ListaControlador}}</pre>
+            </div>
         </div>
         {{endif ListaControlador}}
 
-<br>
-<br>
-        {{if ModeloTabla}}
-        <div class="highlight"> 
-        <pre class="chroma">{{ModeloTabla}}</pre>
-        </div>
-        {{endif ModeloTabla}}
-<br>
-<br>
-        <p>{{acum}}</p>
 
 
-       
+        <br>
+        <br>
+        
+   
+            {{if ControladorTabla}}
+                    <figure class="text-center">
+                        <blockquote class="blockquote">
+                            <h3>Controlador de la Tabla: {{table}}</h3>
+                                            &nbsp;&nbsp;
+                 <button type="button" onclick="copiarAlPortapapeles('p3')" class="btn btn-secondary">Copiar</button>
+                        </blockquote>
+                    </figure>
+                    <div class="card">
+
+                        <div class="card-body">
+                            <pre class="chroma" id="p3">{{ControladorTabla}}</pre>
+                        </div>
+                    </div>
+                    {{endif ControladorTabla}}
+                     <br>
+            <br>
+
+  {{if FormListar}}
+                    <figure class="text-center">
+                        <blockquote class="blockquote">
+                            <h3>Formulario Lista de Registros: {{table}}</h3>
+                &nbsp;&nbsp;
+                 <button type="button" onclick="copiarAlPortapapeles('p4')" class="btn btn-secondary">Copiar</button>
+                        </blockquote>
+                    </figure>
+                    <div class="card">
+
+                        <div class="card-body">
+                            <pre class="chroma" id="p4">{{FormListar}}</pre>
+                        </div>
+                    </div>
+                    {{endif FormListar}}
+                     <br>
+            <br>
+        <p>{{ParametrosConLLavePrimaria}}</p>
+        <p>{{Parametros}}</p>
+        <p>{{Parametros2}}</p>
+        <p>{{Parametros3}}</p>
+        <pre>{{ArrayM}}</pre>
+          <pre>{{ArrayM2}}</pre>
+        <pre>{{ArrayG}}</pre>
+          <pre>{{ArrayG2}}</pre>
+        <pre>{{TiposDatos}}</pre>
+        <pre>{{V2}}</pre>
+
+
+
     </div>
 
-    
+    <script type="text/javascript">
+      
+            function copiarAlPortapapeles(id_elemento) {
+                
+            var content = document.getElementById(id_elemento).textContent;
+
+                navigator.clipboard.writeText(content)
+                    .then(() => {
+                    alert("Texto copiado en el porta papeles...");   
+                    console.log("Text copied to clipboard...")
+                })
+                    .catch(err => {
+                        alert("Error al copiar en el porta papeles...");  
+                    console.log('Something went wrong', err);
+                })
+            }
+
+    </script>

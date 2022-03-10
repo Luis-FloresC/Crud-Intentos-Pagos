@@ -109,8 +109,7 @@ class Categoria extends PublicController
     private function prepareViewData()
     {
         if ($this->_viewData["mode"] == "INS") {
-             $this->_viewData["modeDsc"]
-                 = $this->_modeStrings[$this->_viewData["mode"]];
+             $this->_viewData["modeDsc"] = $this->_modeStrings[$this->_viewData["mode"]];
         } else {
             $tmpCategoria = \Dao\Mnt\Categorias::obtenerPorCatId(
                 intval($this->_viewData["catid"], 10)
@@ -138,7 +137,7 @@ class Categoria extends PublicController
             $this->handlePost();
         }
         $this->prepareViewData();
-        Renderer::render('mnt/Categoria', $this->_viewData);
+        Renderer::render('Mnt/Categoria', $this->_viewData);
     }
 }
 
